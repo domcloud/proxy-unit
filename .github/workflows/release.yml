@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Set up Repo
-      run: curl -sSL https://github.com/nginx/unit/raw/master/tools/setup-unit | bash -s -- repo-config
+      run: curl -sSL https://github.com/nginx/unit/raw/master/tools/setup-unit | sudo bash -s -- repo-config
     - name: Set up Go
-      run: apt install unit-dev unit-go -y
+      run: sudo apt install unit-dev unit-go -y
     - name: Check out code
       uses: actions/checkout@v4
     - name: Build Binary
