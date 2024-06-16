@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Set up Repo
-      run: wget -qO- https://github.com/nginx/unit/raw/master/tools/setup-unit | bash -- repo-config
+      run: curl -sSL https://github.com/nginx/unit/raw/master/tools/setup-unit | bash -s -- repo-config
     - name: Set up Go
       run: apt install unit-dev unit-go -y
     - name: Check out code
