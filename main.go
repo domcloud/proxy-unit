@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/gorilla/websocket"
 	unit "unit.nginx.org/go"
 )
 
@@ -46,7 +45,6 @@ func main() {
 func startProxy(address string) error {
 	proxy := Proxy{
 		DialTarget: fmt.Sprintf("localhost:%d", outPort),
-		upgrader:   websocket.Upgrader{},
 	}
 
 	err := unit.ListenAndServe(address, proxy)

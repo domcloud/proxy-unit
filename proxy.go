@@ -7,14 +7,11 @@ import (
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/gorilla/websocket"
 )
 
 type Proxy struct {
 	DialTarget string
 	connected  bool
-	upgrader   websocket.Upgrader
 }
 
 func (proxy Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
