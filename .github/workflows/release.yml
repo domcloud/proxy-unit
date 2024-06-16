@@ -1,0 +1,54 @@
+name: Go Build and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version'
+        required: true
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Repo
+      run: wget -qO- https://github.com/nginx/unit/raw/master/tools/setup-unit | bash -- repo-config
+    - name: Set up Go
+      run: apt install unit-dev unit-go -y
+    - name: Check out code
+      uses: actions/checkout@v4
+    - name: Build Binary
+      run: make build-ci
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.event.inputs.version }}
+        release_name: Release ${{ github.event.inputs.version }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset AMD64
+      id: upload-release-asset-amd64
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build/proxy-unit-linux-amd64.tar.gz
+        asset_name: proxy-unit-linux-amd64.tar.gz
+        asset_content_type: application/octet-stream
+
+    - name: Upload Release Asset ARM64
+      id: upload-release-asset-arm64
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build/proxy-unit-linux-arm64.tar.gz
+        asset_name: proxy-unit-linux-arm64.tar.gz
+        asset_content_type: application/octet-stream
