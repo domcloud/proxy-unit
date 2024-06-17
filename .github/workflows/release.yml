@@ -14,8 +14,8 @@ jobs:
     steps:
     - name: Set up Repo
       run: curl -sSL https://github.com/nginx/unit/raw/master/tools/setup-unit | sudo bash -s -- repo-config
-    - name: Set up Go
-      run: sudo apt install unit-dev unit-go -y
+    - name: Set up Node
+      run: sudo apt install unit-dev unit-jsc18 -y
     - name: Check out code
       uses: actions/checkout@v4
     - name: Build Binary
@@ -40,15 +40,4 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./build/proxy-unit-linux-amd64.tar.gz
         asset_name: proxy-unit-linux-amd64.tar.gz
-        asset_content_type: application/octet-stream
-
-    - name: Upload Release Asset ARM64
-      id: upload-release-asset-arm64
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./build/proxy-unit-linux-arm64.tar.gz
-        asset_name: proxy-unit-linux-arm64.tar.gz
         asset_content_type: application/octet-stream
