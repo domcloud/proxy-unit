@@ -1,4 +1,4 @@
-name: Go Build and Release
+name: Node Build and Release
 
 on:
   workflow_dispatch:
