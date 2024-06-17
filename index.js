@@ -14,7 +14,7 @@ async function init() {
     }
     if (!port) {
         try {
-            outPort = await getFreePort();
+            port = await getFreePort();
         } catch (err) {
             throw new Error("Can't get free port");
         }
@@ -43,11 +43,11 @@ async function init() {
 
         child.on('spawn', () => {
             console.log(`Started process ${cmd} with PID ${child.pid}`);
-
-            process.on('SIGINT', () => {
-                child.kill('SIGTERM')
-            })
         });
+
+        process.on('exit', () => {
+            child.kill('SIGTERM')
+        })
     }
 
     return { port, host };

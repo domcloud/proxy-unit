@@ -1,6 +1,6 @@
 const net = require('net');
 
-const MAX_RETRY = 1000;
+const MAX_RETRY = 120;
 const WAIT_RETRY = 1000; // in milliseconds
 
 /**
