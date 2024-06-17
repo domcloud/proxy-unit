@@ -3,20 +3,32 @@
 const { getFreePort, tryConnect } = require('./util');
 const { spawn } = require('child_process');
 const httpProxy = require('http-proxy');
+const { isIPv4, isIPv6 } = require('net');
 const http = require('unit-http');
 
 async function init() {
-    var outPort;
-    try {
-        outPort = await getFreePort();
-    } catch (err) {
-        throw new Error("Can't get free port");
+    var port;
+    var host;
+    if (process.env.PORT) {
+        port = parseInt(process.env.PORT);
+    }
+    if (!port) {
+        try {
+            outPort = await getFreePort();
+        } catch (err) {
+            throw new Error("Can't get free port");
+        }
+    }
+    if (process.env.HOST && (isIPv4(process.env.HOST) || isIPv6(process.env.HOST))) {
+        host = process.env.HOST;
+    } else {
+        host = '127.0.0.1';
     }
 
     if (process.argv.length > 2) {
         const cmd = process.argv[2];
         const args = process.argv.slice(3);
-        const env = { ...process.env, PORT: outPort.toString() };
+        const env = { ...process.env, PORT: port.toString(), HOST: host };
 
         const child = spawn(cmd, args, { stdio: 'inherit', env, detached: false });
 
@@ -38,7 +50,7 @@ async function init() {
         });
     }
 
-    return outPort;
+    return { port, host };
 }
 
 
@@ -91,8 +103,8 @@ async function startProxy(host, port) {
 
 (async function () {
     try {
-        let port = await init();
-        await startProxy('localhost', port);
+        let { host, port } = await init();
+        await startProxy(host, port);
     } catch (err) {
         console.error(err);
         process.exit(1);
