@@ -44,9 +44,13 @@ async function init() {
         child.on('spawn', () => {
             console.log(`Started process ${cmd} with PID ${child.pid}`);
         });
+        
+        process.on('SIGINT', () => {
+            child.kill('SIGTERM')
+        })
 
         process.on('exit', () => {
-            child.kill('SIGTERM')
+            child.kill('SIGKILL')
         })
     }
 
