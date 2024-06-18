@@ -2,13 +2,38 @@
 
 This simple app simply spawns another HTTP server with `PORT` env injected with another number, then proxying it for NGINX UNIT request.
 
-Built primarily for integrating NGINX Unit with any apps without recompiling. HTTP and Websocket is supported.
+Built primarily for integrating NGINX Unit with any apps in any language without modifying or even recompiling the code. HTTP 1.1 and Websocket is supported.
 
-## Install
+## Install & Use
 
-Download from releases or build it and place it to `~/.local/bin/proxy-unit`
+Download from releases or build it yourself and place it in system files as `port` executable.
 
-## Usage
+```bash
+wget -qO- https://github.com/domcloud/proxy-unit/releases/download/v0.3.1/proxy-unit-linux-amd64.tar.gz | tar xz 
+sudo mv index.js /usr/local/bin/port 
+sudo mv build /usr/local/bin/build
+```
+
+Here's an example use it as NGINX UNIT application config:
+
+```json
+{
+    "type": "external",
+    "working_directory": "/home/www/app",
+    "executable": "/usr/local/bin/port",
+    "user": "www",
+    "group": "www",
+    "arguments": [
+        "bash",
+        "-lc",
+        "node app.js"
+    ]
+}
+```
+
+That will execute `node app.js` with local environment in `www` user and `PORT` env that the app has to listen.
+
+## Build
 
 Use `Makefile` to build and run the app. Requires `make`, `go` and `bun` already installed.
 
