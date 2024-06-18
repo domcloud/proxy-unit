@@ -2,9 +2,9 @@
 
 const { getFreePort, tryConnect } = require('./util');
 const { spawn } = require('child_process');
-const httpProxy = require('http-proxy');
+const httpProxy = require('./lib/http-proxy');
 const { isIPv4, isIPv6 } = require('net');
-const http = require('unit-http');
+const http = process.env.NXT_UNIT_INIT ? require('unit-http') : require('http');
 
 async function init() {
     var port;
@@ -59,10 +59,7 @@ async function init() {
 
 
 async function startProxy(host, port) {
-    /**
-     * @type {httpProxy<IncomingMessage, ServerResponse>}
-     */
-    var proxy = new httpProxy.createProxyServer({
+    var proxy = new httpProxy.Server({
         target: {
             host,
             port
@@ -101,8 +98,11 @@ async function startProxy(host, port) {
             socket.end();
         }
     });
-
-    proxyServer.listen(8000);
+    let startPort = 8000;
+    if ( !process.env.NXT_UNIT_INIT && process.env.PROXY_START_PORT) {
+        startPort = parseInt(process.env.PROXY_START_PORT);
+    }
+    proxyServer.listen(startPort);
 }
 
 (async function () {

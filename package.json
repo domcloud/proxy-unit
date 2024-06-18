@@ -14,7 +14,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "http-proxy": "^1.18.1",
+    "eventemitter3": "^4.0.0",
+    "requires-port": "^1.0.0",
     "unit-http": "^1.32.1"
   }
 }
