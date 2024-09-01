@@ -10,12 +10,12 @@ on:
 jobs:
   build:
     name: Build and Release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - name: Set up Repo
       run: curl -sSL https://github.com/nginx/unit/raw/master/tools/setup-unit | sudo bash -s -- repo-config
     - name: Set up Node
-      run: sudo apt install unit-dev unit-jsc18 -y
+      run: sudo apt install unit-dev -y
     - name: Check out code
       uses: actions/checkout@v4
     - name: Build Binary
